@@ -8,10 +8,10 @@ import (
 )
 
 func main() {
-	handlers := handlers.Handler{}
-	server := todoback.Server{}
+	handlers := new(handlers.Handler)
+	server := new(todoback.Server)
 
-	if err := server.Run("8080", handlers.InitRoutes().Handler()); err != nil {
+	if err := server.Run("8080", handlers.InitRoutes()); err != nil {
 		log.Fatal(err)
 	}
 }
