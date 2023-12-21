@@ -2,9 +2,9 @@ package models
 
 type User struct {
 	Id       int    `json:"-" gorm:"primaryKey"`
-	Name     string `json:"name"`
-	Username string `json:"username"`
-	Password string `json:"password"` // Not hash for a while
+	Name     string `json:"name" binding:"required"`
+	Username string `json:"username" binding:"required"`
+	Password string `json:"password" binding:"required"` // Not hash for a while
 
 	UserLists []UserList `gorm:"foreignKey:UserId"`
 }
