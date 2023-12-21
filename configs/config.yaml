@@ -4,7 +4,6 @@ server_port: "8080"
 # db
 host: "localhost"
 user: "postgres"
-password: "314159"
 dbname: "gorm_test"
 port: "5432"
 sslmode: "disable"

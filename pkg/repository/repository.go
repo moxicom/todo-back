@@ -1,5 +1,7 @@
 package repository
 
+import "gorm.io/gorm"
+
 // DB handlers
 
 type Auth interface {
@@ -17,6 +19,6 @@ type Repository struct {
 	Item
 }
 
-func NewRepository() *Repository {
+func NewRepository(db *gorm.DB) *Repository {
 	return &Repository{}
 }

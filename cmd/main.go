@@ -1,18 +1,14 @@
 package main
 
 import (
-	"fmt"
 	"log"
 
 	todoback "github.com/moxicom/todo-back"
 	config "github.com/moxicom/todo-back/configs"
-	"github.com/moxicom/todo-back/models"
 	"github.com/moxicom/todo-back/pkg/handlers"
 	"github.com/moxicom/todo-back/pkg/repository"
 	"github.com/moxicom/todo-back/pkg/service"
 	"github.com/spf13/viper"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
 )
 
 func main() {
@@ -22,27 +18,24 @@ func main() {
 	}
 
 	// Db opening
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=%s",
-		viper.GetString("host"),
-		viper.GetString("user"),
-		viper.GetString("password"),
-		viper.GetString("dbname"),
-		viper.GetString("port"),
-		viper.GetString("sslmode"))
+	cfg, err := config.InitDbConfig()
+	if err != nil {
+		log.Fatalf("%s", err.Error())
+	}
 
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	db, err := repository.NewDbInit(cfg)
 	if err != nil {
 		log.Fatalf("%s", err.Error())
 	}
 
 	//Db Migration
-	err = db.AutoMigrate(&models.ListItem{}, &models.UserList{}, &models.Item{}, &models.User{}, &models.TodoList{})
+	err = repository.NewMigration(db)
 	if err != nil {
 		log.Fatalf("%s", err.Error())
 	}
 
 	// Dependency injection
-	repository := repository.NewRepository()
+	repository := repository.NewRepository(db)
 	service := service.NewService(repository)
 	handler := handlers.NewHandler(service)
 	server := todoback.NewServer()
