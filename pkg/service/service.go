@@ -8,7 +8,7 @@ import (
 // Business logic
 
 type Auth interface {
-	CreateUser(user *models.User) (int, error)
+	CreateUser(user models.User) (int, error)
 }
 
 type TodoList interface {

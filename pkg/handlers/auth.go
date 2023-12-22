@@ -16,7 +16,15 @@ func (h *Handler) SignUp(c *gin.Context) {
 	}
 
 	// h.Service.Auth.CreateUser...
+	id, err := h.service.Auth.CreateUser(input)
+	if err != nil {
+		newResponseError(c, http.StatusInternalServerError, err.Error())
+		return
+	}
 
+	c.JSON(http.StatusOK, map[string]interface{}{
+		"id": id,
+	})
 }
 
 func (h *Handler) SignIn(c *gin.Context) {
