@@ -15,6 +15,8 @@ func (h *Handler) SignUp(c *gin.Context) {
 		return
 	}
 
+	// h.Service.Auth.CreateUser...
+
 }
 
 func (h *Handler) SignIn(c *gin.Context) {

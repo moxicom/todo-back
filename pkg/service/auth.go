@@ -6,10 +6,10 @@ import (
 )
 
 type AuthService struct {
-	repository repository.Repository
+	repository repository.Auth
 }
 
-func NewAuthService(r repository.Repository) *AuthService {
+func NewAuthService(r repository.Auth) *AuthService {
 	return &AuthService{
 		repository: r,
 	}
@@ -17,4 +17,8 @@ func NewAuthService(r repository.Repository) *AuthService {
 
 func (s *AuthService) CreateUser(user *models.User) (int, error) {
 	return s.repository.CreateUser(user)
+}
+
+func (s *AuthService) makePasswordHash(password string) (string, error) {
+	return "", nil
 }

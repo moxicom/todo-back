@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/joho/godotenv"
 	todoback "github.com/moxicom/todo-back"
 	config "github.com/moxicom/todo-back/configs"
 	"github.com/moxicom/todo-back/pkg/handlers"
@@ -13,6 +14,10 @@ import (
 func main() {
 	// Config init
 	if err := config.Init(); err != nil {
+		logrus.Fatalf("%s", err.Error())
+	}
+	// dotenv init
+	if err := godotenv.Load(); err != nil {
 		logrus.Fatalf("%s", err.Error())
 	}
 
