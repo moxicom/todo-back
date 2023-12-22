@@ -1,10 +1,14 @@
 package service
 
-import "github.com/moxicom/todo-back/pkg/repository"
+import (
+	"github.com/moxicom/todo-back/models"
+	"github.com/moxicom/todo-back/pkg/repository"
+)
 
 // Business logic
 
 type Auth interface {
+	CreateUser(user *models.User) (int, error)
 }
 
 type TodoList interface {

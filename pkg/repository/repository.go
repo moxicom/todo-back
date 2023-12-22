@@ -1,10 +1,14 @@
 package repository
 
-import "gorm.io/gorm"
+import (
+	"github.com/moxicom/todo-back/models"
+	"gorm.io/gorm"
+)
 
 // DB handlers
 
 type Auth interface {
+	CreateUser(user *models.User) (int, error)
 }
 
 type TodoList interface {
@@ -20,5 +24,7 @@ type Repository struct {
 }
 
 func NewRepository(db *gorm.DB) *Repository {
-	return &Repository{}
+	return &Repository{
+		Auth: NewAuthRepository(db),
+	}
 }
