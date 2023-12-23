@@ -21,3 +21,10 @@ func (r *AuthRepository) CreateUser(user models.User) (int, error) {
 	}
 	return user.Id, nil
 }
+
+func (r *AuthRepository) GetUser(user models.User) (models.User, error) {
+	var result models.User
+	query := "username = ? AND password = ?"
+	queryRes := r.db.Where(query, user.Username, user.Password)
+	return result, queryRes.Error
+}
