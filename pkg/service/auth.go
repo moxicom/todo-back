@@ -2,6 +2,7 @@ package service
 
 import (
 	"crypto/sha1"
+	"errors"
 	"fmt"
 	"os"
 	"time"
@@ -33,6 +34,10 @@ func NewAuthService(r repository.Auth) *AuthService {
 
 func (s *AuthService) CreateUser(user models.User) (int, error) {
 	user.Password = makePasswordHash(user.Password)
+	err := s.repository.CheckUsernameExistence(user.Username)
+	if err == nil {
+		return 0, errors.New(fmt.Sprintf("User with username %s is already exists", user.Username))
+	}
 	return s.repository.CreateUser(user)
 }
 
@@ -44,7 +49,7 @@ func makePasswordHash(password string) string {
 }
 
 func (s *AuthService) CreateToken(username, password string) (string, error) {
-	user, err := s.repository.GetUser(models.User{Username: username, Password: makePasswordHash(password)})
+	user, err := s.repository.GetUser(username, makePasswordHash(password))
 	if err != nil {
 		return "", err
 	}

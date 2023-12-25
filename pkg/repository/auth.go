@@ -14,6 +14,7 @@ func NewAuthRepository(db *gorm.DB) *AuthRepository {
 		db: db,
 	}
 }
+
 func (r *AuthRepository) CreateUser(user models.User) (int, error) {
 	result := r.db.Create(&user)
 	if result.Error != nil {
@@ -22,9 +23,16 @@ func (r *AuthRepository) CreateUser(user models.User) (int, error) {
 	return user.Id, nil
 }
 
-func (r *AuthRepository) GetUser(user models.User) (models.User, error) {
+func (r *AuthRepository) CheckUsernameExistence(username string) error {
+	var result models.User
+	query := "username = ?"
+	err := r.db.Where(query, username).First(&result).Error
+	return err
+}
+
+func (r *AuthRepository) GetUser(username, password string) (models.User, error) {
 	var result models.User
 	query := "username = ? AND password = ?"
-	queryRes := r.db.Where(query, user.Username, user.Password)
-	return result, queryRes.Error
+	err := r.db.Where(query, username, password).First(&result).Error
+	return result, err
 }
