@@ -6,7 +6,7 @@ type User struct {
 	Username string `json:"username" binding:"required"`
 	Password string `json:"password" binding:"required"` // Not hash for a while
 
-	UserLists []UserList `gorm:"foreignKey:UserId"`
+	UserLists []UserList `gorm:"foreignKey:UserId" json:"-"`
 }
 
 type UserList struct {
@@ -20,8 +20,8 @@ type TodoList struct {
 	Title       string `json:"title"`
 	Description string `json:"description"`
 
-	UserLists []UserList `gorm:"foreignKey:ListId"`
-	ItemLists []ListItem `gorm:"foreignKey:ListId"`
+	UserLists []UserList `gorm:"foreignKey:ListId" json:"-"`
+	ItemLists []ListItem `gorm:"foreignKey:ListId" json:"-"`
 }
 
 type ListItem struct {
@@ -36,5 +36,5 @@ type Item struct {
 	Description string `json:"description"`
 	Done        bool   `json:"done"`
 
-	ListItems []ListItem `gorm:"foreignKey:ItemId"`
+	ListItems []ListItem `gorm:"foreignKey:ItemId" json:"-"`
 }
