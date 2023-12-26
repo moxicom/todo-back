@@ -5,17 +5,17 @@ import (
 	"gorm.io/gorm"
 )
 
-type AuthRepository struct {
+type authRepository struct {
 	db *gorm.DB
 }
 
-func NewAuthRepository(db *gorm.DB) *AuthRepository {
-	return &AuthRepository{
+func NewAuthRepository(db *gorm.DB) *authRepository {
+	return &authRepository{
 		db: db,
 	}
 }
 
-func (r *AuthRepository) CreateUser(user models.User) (int, error) {
+func (r *authRepository) CreateUser(user models.User) (int, error) {
 	result := r.db.Create(&user)
 	if result.Error != nil {
 		return 0, result.Error
@@ -23,14 +23,14 @@ func (r *AuthRepository) CreateUser(user models.User) (int, error) {
 	return user.Id, nil
 }
 
-func (r *AuthRepository) CheckUsernameExistence(username string) error {
+func (r *authRepository) CheckUsernameExistence(username string) error {
 	var result models.User
 	query := "username = ?"
 	err := r.db.Where(query, username).First(&result).Error
 	return err
 }
 
-func (r *AuthRepository) GetUser(username, password string) (models.User, error) {
+func (r *authRepository) GetUser(username, password string) (models.User, error) {
 	var result models.User
 	query := "username = ? AND password = ?"
 	err := r.db.Where(query, username, password).First(&result).Error

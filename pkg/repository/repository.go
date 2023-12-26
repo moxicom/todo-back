@@ -14,6 +14,7 @@ type Auth interface {
 }
 
 type TodoList interface {
+	Create(userId int, list models.TodoList) (int, error)
 }
 
 type Item interface {
@@ -27,6 +28,7 @@ type Repository struct {
 
 func NewRepository(db *gorm.DB) *Repository {
 	return &Repository{
-		Auth: NewAuthRepository(db),
+		Auth:     NewAuthRepository(db),
+		TodoList: newTodoListRepository(db),
 	}
 }
