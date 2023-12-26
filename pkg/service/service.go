@@ -15,6 +15,7 @@ type Auth interface {
 
 type TodoList interface {
 	Create(userId int, list models.TodoList) (int, error)
+	GetAll(userId int) ([]models.TodoList, error)
 }
 
 type Item interface {

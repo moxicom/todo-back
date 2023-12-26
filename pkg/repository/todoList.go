@@ -39,3 +39,15 @@ func (r *todoListRepository) Create(userId int, list models.TodoList) (int, erro
 
 	return listTemp.Id, tx.Commit().Error
 }
+
+func (r *todoListRepository) GetAll(userId int) ([]models.TodoList, error) {
+	var lists []models.TodoList
+
+	query := "id = ?"
+	err := r.db.Where(query, userId).Find(&lists).Error
+	if err != nil {
+		return []models.TodoList{}, err
+	}
+
+	return lists, nil
+}
