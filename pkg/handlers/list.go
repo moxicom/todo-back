@@ -71,6 +71,7 @@ func (h *Handler) GetList(c *gin.Context) {
 	list, err := h.service.TodoList.GetById(userId, listId)
 	if err != nil {
 		newResponseError(c, http.StatusInternalServerError, err.Error())
+		return
 	}
 
 	c.JSON(http.StatusOK, list)
