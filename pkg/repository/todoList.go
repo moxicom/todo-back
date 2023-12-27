@@ -69,3 +69,20 @@ func (r *todoListRepository) GetById(userId, listId int) (models.TodoList, error
 
 	return list, nil
 }
+
+func (r *todoListRepository) Update(userId, listId int, input models.TodoList) error {
+	list, err := r.GetById(userId, listId)
+	if err != nil {
+		return err
+	}
+
+	list.Title = input.Title
+	list.Description = input.Description
+
+	err = r.db.Model(&list).Updates(models.TodoList{Title: input.Title, Description: input.Description}).Error
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
