@@ -108,5 +108,23 @@ func (h *Handler) UpdateList(c *gin.Context) {
 }
 
 func (h *Handler) DeleteList(c *gin.Context) {
+	userId, err := getUserId(c)
+	if err != nil {
+		newResponseError(c, http.StatusInternalServerError, err.Error())
+		return
+	}
 
+	listId, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		newResponseError(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	err = h.service.TodoList.Delete(userId, listId)
+	if err != nil {
+		newResponseError(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, map[string]interface{}{})
 }

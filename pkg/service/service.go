@@ -18,9 +18,15 @@ type TodoList interface {
 	GetAll(userId int) ([]models.TodoList, error)
 	GetById(userId, listId int) (models.TodoList, error)
 	Update(userId, listId int, input models.TodoList) error
+	Delete(userId, listId int) error
 }
 
 type Item interface {
+	// Create
+	// GetAll
+	// GetById
+	// Update
+	// Delte
 }
 
 type Service struct {

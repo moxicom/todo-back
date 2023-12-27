@@ -86,3 +86,24 @@ func (r *todoListRepository) Update(userId, listId int, input models.TodoList) e
 
 	return nil
 }
+
+func (r *todoListRepository) Delete(userId, listId int) error {
+	_, err := r.GetById(userId, listId)
+	if err != nil {
+		return err
+	}
+
+	// delete
+	tx := r.db.Begin()
+	if err := tx.Where("user_id = ? AND list_id = ?", userId, listId).Delete(&models.UserList{}).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	if err := tx.Where("id = ?", listId).Delete(&models.TodoList{}).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	return tx.Commit().Error
+}
