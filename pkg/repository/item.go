@@ -42,9 +42,6 @@ func (r *itemRepository) Create(listId int, item models.Item) (int, error) {
 func (r *itemRepository) GetAll(listId int) ([]models.Item, error) {
 	var items []models.Item
 
-	// r.db.Joins("INNER JOIN user_lists ul ON todo_lists.id = ul.list_id").
-	// 	Where("ul.user_id = ? AND ul.list_id = ?", userId, listId).
-	// 	First(&list)
 	err := r.db.
 		Joins("INNER JOIN list_items li ON items.id = li.item_id").
 		Where("li.list_id = ?", listId).Find(&items).Error
@@ -55,9 +52,17 @@ func (r *itemRepository) GetAll(listId int) ([]models.Item, error) {
 	return items, nil
 }
 
-func (r *itemRepository) GetById(itemId int) (models.Item, error) {
-	return models.Item{}, nil
+func (r *itemRepository) GetById(listId, itemId int) (models.Item, error) {
+	var item models.Item
+	err := r.db.
+		Joins("INNER JOIN list_items li ON items.id = li.item_id").
+		Where("li.list_id = ? AND items.id = ?", listId, itemId).First(&item).Error
+	if err != nil {
+		return models.Item{}, err
+	}
+	return item, nil
 }
+
 func (r *itemRepository) Delete(itemId int) error {
 	return nil
 }

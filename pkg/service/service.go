@@ -25,7 +25,7 @@ type Item interface {
 	CheckList(userId, listId int) error
 	Create(userId, listId int, item models.Item) (int, error)
 	GetAll(userId, listId int) ([]models.Item, error)
-	GetById(userId, itemId int) (models.Item, error)
+	GetById(userId, listId, itemId int) (models.Item, error)
 	Delete(userId, itemId int) error
 	Update(userId, itemId int, input models.Item) error
 }
