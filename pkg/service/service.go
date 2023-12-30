@@ -22,11 +22,12 @@ type TodoList interface {
 }
 
 type Item interface {
-	// Create
-	// GetAll
-	// GetById
-	// Update
-	// Delte
+	CheckList(userId, listId int) error
+	Create(userId, listId int, item models.Item) (int, error)
+	GetAll(userId, listId int) ([]models.Item, error)
+	GetById(userId, itemId int) (models.Item, error)
+	Delete(userId, itemId int) error
+	Update(userId, itemId int, input models.Item) error
 }
 
 type Service struct {
@@ -37,7 +38,8 @@ type Service struct {
 
 func NewService(repository *repository.Repository) *Service {
 	return &Service{
-		Auth:     NewAuthService(repository.Auth),
-		TodoList: NewTodoService(repository.TodoList),
+		Auth:     newAuthService(repository.Auth),
+		TodoList: newTodoService(repository.TodoList),
+		Item:     newItemService(repository.Item),
 	}
 }

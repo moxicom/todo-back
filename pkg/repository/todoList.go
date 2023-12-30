@@ -1,8 +1,6 @@
 package repository
 
 import (
-	"fmt"
-
 	"github.com/moxicom/todo-back/models"
 	"gorm.io/gorm"
 )
@@ -44,7 +42,6 @@ func (r *todoListRepository) Create(userId int, list models.TodoList) (int, erro
 
 func (r *todoListRepository) GetAll(userId int) ([]models.TodoList, error) {
 	var lists []models.TodoList
-	fmt.Println(userId)
 
 	err := r.db.
 		Joins("INNER JOIN user_lists ul ON todo_lists.id = ul.list_id").

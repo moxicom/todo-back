@@ -5,32 +5,32 @@ import (
 	"github.com/moxicom/todo-back/pkg/repository"
 )
 
-type TodoService struct {
+type todoService struct {
 	repository repository.TodoList
 }
 
-func NewTodoService(repository repository.TodoList) *TodoService {
-	return &TodoService{
+func newTodoService(repository repository.TodoList) *todoService {
+	return &todoService{
 		repository: repository,
 	}
 }
 
-func (s *TodoService) Create(userId int, list models.TodoList) (int, error) {
+func (s *todoService) Create(userId int, list models.TodoList) (int, error) {
 	return s.repository.Create(userId, list)
 }
 
-func (s *TodoService) GetAll(userId int) ([]models.TodoList, error) {
+func (s *todoService) GetAll(userId int) ([]models.TodoList, error) {
 	return s.repository.GetAll(userId)
 }
 
-func (s *TodoService) GetById(userId, listId int) (models.TodoList, error) {
+func (s *todoService) GetById(userId, listId int) (models.TodoList, error) {
 	return s.repository.GetById(userId, listId)
 }
 
-func (s *TodoService) Update(userId, listId int, input models.TodoList) error {
+func (s *todoService) Update(userId, listId int, input models.TodoList) error {
 	return s.repository.Update(userId, listId, input)
 }
 
-func (s *TodoService) Delete(userId, listId int) error {
+func (s *todoService) Delete(userId, listId int) error {
 	return s.repository.Delete(userId, listId)
 }
