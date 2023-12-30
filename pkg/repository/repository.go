@@ -27,7 +27,7 @@ type Item interface {
 	GetAll(listId int) ([]models.Item, error)
 	GetById(listId, itemId int) (models.Item, error)
 	Delete(itemId int) error
-	Update(itemId int, input models.Item) error
+	Update(listId, itemId int, input models.Item) error
 }
 
 type Repository struct {

@@ -27,7 +27,7 @@ type Item interface {
 	GetAll(userId, listId int) ([]models.Item, error)
 	GetById(userId, listId, itemId int) (models.Item, error)
 	Delete(userId, itemId int) error
-	Update(userId, itemId int, input models.Item) error
+	Update(userId, listId, itemId int, input models.Item) error
 }
 
 type Service struct {

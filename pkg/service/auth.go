@@ -13,6 +13,7 @@ import (
 )
 
 const (
+	jwtTimeOut = 12 * time.Hour
 	saltOs     = "PASSWORD_SALT"      // password hash salt
 	signingKey = "wesdrftgyhujikujgh" // jwt signing key
 )
@@ -55,7 +56,7 @@ func (s *authService) CreateToken(username, password string) (string, error) {
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &tokenClaims{
 		jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(3 * time.Hour).Unix(),
+			ExpiresAt: time.Now().Add(jwtTimeOut).Unix(),
 			IssuedAt:  time.Now().Unix(),
 		},
 		user.Id,

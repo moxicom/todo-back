@@ -66,6 +66,20 @@ func (r *itemRepository) GetById(listId, itemId int) (models.Item, error) {
 func (r *itemRepository) Delete(itemId int) error {
 	return nil
 }
-func (r *itemRepository) Update(itemId int, input models.Item) error {
+func (r *itemRepository) Update(listId, itemId int, input models.Item) error {
+	item, err := r.GetById(listId, itemId)
+	if err != nil {
+		return err
+	}
+
+	item.Title = input.Title
+	item.Description = input.Description
+	item.Done = input.Done
+
+	err = r.db.Save(&item).Error
+	if err != nil {
+		return err
+	}
+
 	return nil
 }

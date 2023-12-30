@@ -40,10 +40,13 @@ func (s *itemService) GetById(userId, listId, itemId int) (models.Item, error) {
 	return s.repository.GetById(listId, itemId)
 }
 
-func (s *itemService) Delete(userId, itemId int) error {
-	return nil
+func (s *itemService) Update(userId, listId, itemId int, input models.Item) error {
+	if err := s.CheckList(userId, listId); err != nil {
+		return err
+	}
+	return s.repository.Update(listId, itemId, input)
 }
 
-func (s *itemService) Update(userId, itemId int, input models.Item) error {
+func (s *itemService) Delete(userId, itemId int) error {
 	return nil
 }

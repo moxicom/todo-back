@@ -94,7 +94,37 @@ func (h *Handler) GetItem(c *gin.Context) {
 }
 
 func (h *Handler) UpdateItem(c *gin.Context) {
+	userId, err := getUserId(c)
+	if err != nil {
+		newResponseError(c, http.StatusInternalServerError, err.Error())
+		return
+	}
 
+	listId, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		newResponseError(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	itemId, err := strconv.Atoi(c.Param("item_id"))
+	if err != nil {
+		newResponseError(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	var input models.Item
+	if err := c.ShouldBindJSON(&input); err != nil {
+		newResponseError(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	err = h.service.Item.Update(userId, listId, itemId, input)
+	if err != nil {
+		newResponseError(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, map[string]interface{}{"id": itemId})
 }
 
 func (h *Handler) DeleteItem(c *gin.Context) {
