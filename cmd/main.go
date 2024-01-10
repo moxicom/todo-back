@@ -1,6 +1,11 @@
 package main
 
 import (
+	"context"
+	"os/signal"
+	"syscall"
+	"time"
+
 	"github.com/joho/godotenv"
 	todoback "github.com/moxicom/todo-back"
 	config "github.com/moxicom/todo-back/configs"
@@ -12,6 +17,15 @@ import (
 )
 
 func main() {
+	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
+	defer stop()
+
+	if err := runServer(ctx); err != nil {
+		logrus.Fatal(err)
+	}
+}
+
+func runServer(ctx context.Context) error {
 	// Config init
 	if err := config.Init(); err != nil {
 		logrus.Fatalf("%s", err.Error())
@@ -44,7 +58,30 @@ func main() {
 	handler := handlers.NewHandler(service)
 	server := todoback.NewServer()
 
-	if err = server.Run(viper.GetString("server_port"), handler.InitRoutes()); err != nil {
-		logrus.Fatal(err)
+	go func() {
+		if err = server.Run(viper.GetString("server_port"), handler.InitRoutes()); err != nil {
+			logrus.Fatalf("Listen and serve: %s", err.Error())
+		}
+	}()
+
+	<-ctx.Done()
+
+	logrus.Println("Shutting down gracefully")
+	shutdownCtx, cancel := context.WithTimeout(context.Background(), time.Second*5)
+	defer cancel()
+
+	if err := server.Shutdown(shutdownCtx); err != nil {
+		return err
 	}
+
+	sqlDB, err := db.DB()
+	if err != nil {
+		return err
+	}
+
+	if err := sqlDB.Close(); err != nil {
+		return err
+	}
+
+	return nil
 }
