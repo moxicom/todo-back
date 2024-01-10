@@ -63,9 +63,6 @@ func (r *itemRepository) GetById(listId, itemId int) (models.Item, error) {
 	return item, nil
 }
 
-func (r *itemRepository) Delete(itemId int) error {
-	return nil
-}
 func (r *itemRepository) Update(listId, itemId int, input models.Item) error {
 	item, err := r.GetById(listId, itemId)
 	if err != nil {
@@ -82,4 +79,23 @@ func (r *itemRepository) Update(listId, itemId int, input models.Item) error {
 	}
 
 	return nil
+}
+
+func (r *itemRepository) Delete(listId, itemId int) error {
+	tx := r.db.Begin()
+
+	if err := tx.Where("item_id = ?", itemId).Delete(&models.ListItem{}).Error; err != nil {
+		return err
+	}
+
+	item, err := r.GetById(listId, itemId)
+	if err != nil {
+		return err
+	}
+
+	err = tx.Delete(&item).Error
+	if err != nil {
+		return err
+	}
+	return tx.Commit().Error
 }

@@ -47,6 +47,9 @@ func (s *itemService) Update(userId, listId, itemId int, input models.Item) erro
 	return s.repository.Update(listId, itemId, input)
 }
 
-func (s *itemService) Delete(userId, itemId int) error {
-	return nil
+func (s *itemService) Delete(userId, listId, itemId int) error {
+	if err := s.CheckList(userId, listId); err != nil {
+		return err
+	}
+	return s.repository.Delete(listId, itemId)
 }

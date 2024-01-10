@@ -26,7 +26,7 @@ type Item interface {
 	Create(userId, listId int, item models.Item) (int, error)
 	GetAll(userId, listId int) ([]models.Item, error)
 	GetById(userId, listId, itemId int) (models.Item, error)
-	Delete(userId, itemId int) error
+	Delete(userId, listId, itemId int) error
 	Update(userId, listId, itemId int, input models.Item) error
 }
 
