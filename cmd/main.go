@@ -16,6 +16,15 @@ import (
 	"github.com/spf13/viper"
 )
 
+// @title Todo application back
+// @version 0.1
+// @description This is a simple backend for todo application using golang
+
+// @BasePath /
+
+// @securityDefinitions.apikey ApiKeyAuth
+// @in header
+// @name Authorization
 func main() {
 	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer stop()

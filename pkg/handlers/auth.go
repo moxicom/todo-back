@@ -7,6 +7,18 @@ import (
 	"github.com/moxicom/todo-back/models"
 )
 
+// @Summary SignUp
+// @Tags auth
+// @Description create account
+// @ID create-account
+// @Accept  json
+// @Produce  json
+// @Param input body models.User true "account info"
+// @Success 200 {integer} integer 1
+// @Failure 400,404 {object} errorMsg
+// @Failure 500 {object} errorMsg
+// @Failure default {object} errorMsg
+// @Router /auth/sign-up [post]
 func (h *Handler) SignUp(c *gin.Context) {
 	var input models.User
 
@@ -32,6 +44,18 @@ type signInInput struct {
 	Password string `json:"password" binding:"required"`
 }
 
+// @Summary SignIn
+// @Tags auth
+// @Description sign in to account
+// @ID sign-in
+// @Accept  json
+// @Produce  json
+// @Param input body signInInput true "credentials"
+// @Success 200 {string} string "token"
+// @Failure 400,404 {object} errorMsg
+// @Failure 500 {object} errorMsg
+// @Failure default {object} errorMsg
+// @Router /auth/sign-in [post]
 func (h *Handler) SignIn(c *gin.Context) {
 	var input signInInput
 

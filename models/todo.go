@@ -10,15 +10,15 @@ type User struct {
 }
 
 type UserList struct {
-	Id     int `gorm:"primaryKey"`
+	Id     int `gorm:"primaryKey" json:"-"`
 	UserId int
 	ListId int
 }
 
 type TodoList struct {
 	Id          int    `json:"id" gorm:"primaryKey"`
-	Title       string `json:"title"`
-	Description string `json:"description"`
+	Title       string `json:"title" binding:"required"`
+	Description string `json:"description" binding:"required"`
 
 	UserLists []UserList `gorm:"foreignKey:ListId" json:"-"`
 	ItemLists []ListItem `gorm:"foreignKey:ListId" json:"-"`
@@ -32,9 +32,9 @@ type ListItem struct {
 
 type Item struct {
 	Id          int    `json:"id" gorm:"primaryKey"`
-	Title       string `json:"title"`
-	Description string `json:"description"`
-	Done        bool   `json:"done"`
+	Title       string `json:"title" binding:"required"`
+	Description string `json:"description" binding:"required"`
+	Done        bool   `json:"done" binding:"required"`
 
 	ListItems []ListItem `gorm:"foreignKey:ItemId" json:"-"`
 }

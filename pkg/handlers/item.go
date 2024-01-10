@@ -8,6 +8,18 @@ import (
 	"github.com/moxicom/todo-back/models"
 )
 
+// @Summary CreateItem
+// @Tags auth
+// @Description sign in to account
+// @ID sign-in
+// @Accept  json
+// @Produce  json
+// @Param input body signInInput true "credentials"
+// @Success 200 {string} string "token"
+// @Failure 400,404 {object} errorMsg
+// @Failure 500 {object} errorMsg
+// @Failure default {object} errorMsg
+// @Router /auth/sign-in [post]
 func (h *Handler) CreateItem(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
