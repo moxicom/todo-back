@@ -16,7 +16,7 @@ import (
 // @Accept  json
 // @Produce  json
 // @Param input body models.TodoList true "list info"
-// @Success 200 {integer} integer 1
+// @Success 200 {object} responseId
 // @Failure 400,404 {object} errorMsg
 // @Failure 500 {object} errorMsg
 // @Failure default {object} errorMsg
@@ -40,8 +40,8 @@ func (h *Handler) CreateList(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, map[string]interface{}{
-		"id": id,
+	c.JSON(http.StatusOK, responseId{
+		Id: id,
 	})
 }
 
@@ -123,7 +123,7 @@ func (h *Handler) GetList(c *gin.Context) {
 // @Produce  json
 // @Param id path int true "list id"
 // @Param input body models.TodoList true "update list info"
-// @Success 200 {integer} integer 1
+// @Success 200 {object} responseId
 // @Failure 400,404 {object} errorMsg
 // @Failure 500 {object} errorMsg
 // @Failure default {object} errorMsg
@@ -153,8 +153,8 @@ func (h *Handler) UpdateList(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, map[string]interface{}{
-		"id": listId,
+	c.JSON(http.StatusOK, responseId{
+		Id: listId,
 	})
 }
 
@@ -167,6 +167,7 @@ func (h *Handler) UpdateList(c *gin.Context) {
 // @Produce  json
 // @Success 200
 // @Param id path int true "list id"
+// @Success 200 {object} responseId
 // @Failure 400,404 {object} errorMsg
 // @Failure 500 {object} errorMsg
 // @Failure default {object} errorMsg
@@ -190,5 +191,7 @@ func (h *Handler) DeleteList(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, map[string]interface{}{})
+	c.JSON(http.StatusOK, responseId{
+		Id: listId,
+	})
 }

@@ -1,9 +1,15 @@
-basePath: /
 definitions:
   handlers.errorMsg:
     properties:
       message:
         type: string
+    type: object
+  handlers.getAllItemsResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/models.Item'
+        type: array
     type: object
   handlers.getAllListsResponse:
     properties:
@@ -11,6 +17,11 @@ definitions:
         items:
           $ref: '#/definitions/models.TodoList'
         type: array
+    type: object
+  handlers.responseId:
+    properties:
+      id:
+        type: integer
     type: object
   handlers.signInInput:
     properties:
@@ -21,6 +32,21 @@ definitions:
     required:
     - password
     - username
+    type: object
+  models.Item:
+    properties:
+      description:
+        type: string
+      done:
+        type: boolean
+      id:
+        type: integer
+      title:
+        type: string
+    required:
+    - description
+    - done
+    - title
     type: object
   models.TodoList:
     properties:
@@ -50,9 +76,6 @@ definitions:
     type: object
 info:
   contact: {}
-  description: This is a simple backend for todo application using golang
-  title: Todo application back
-  version: "0.1"
 paths:
   /api/lists:
     get:
@@ -106,7 +129,7 @@ paths:
         "200":
           description: OK
           schema:
-            type: integer
+            $ref: '#/definitions/handlers.responseId'
         "400":
           description: Bad Request
           schema:
@@ -145,6 +168,8 @@ paths:
       responses:
         "200":
           description: OK
+          schema:
+            $ref: '#/definitions/handlers.responseId'
         "400":
           description: Bad Request
           schema:
@@ -228,7 +253,7 @@ paths:
         "200":
           description: OK
           schema:
-            type: integer
+            $ref: '#/definitions/handlers.responseId'
         "400":
           description: Bad Request
           schema:
@@ -250,6 +275,231 @@ paths:
       summary: Update list
       tags:
       - lists
+  /api/lists/{listId}/items:
+    post:
+      consumes:
+      - application/json
+      description: create item
+      operationId: create-item
+      parameters:
+      - description: list id
+        in: path
+        name: listId
+        required: true
+        type: integer
+      - description: Item
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/models.Item'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.responseId'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.errorMsg'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.errorMsg'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.errorMsg'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handlers.errorMsg'
+      security:
+      - ApiKeyAuth: []
+      summary: Create item
+      tags:
+      - item
+  /api/lists/{listId}/items/:
+    get:
+      consumes:
+      - application/json
+      description: Get all items
+      operationId: get-all-items
+      parameters:
+      - description: list id
+        in: path
+        name: listId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.getAllItemsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.errorMsg'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.errorMsg'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.errorMsg'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handlers.errorMsg'
+      security:
+      - ApiKeyAuth: []
+      summary: Get all items
+      tags:
+      - item
+  /api/lists/{listId}/items/{itemId}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete item by id
+      operationId: delete-item-by-id
+      parameters:
+      - description: list id
+        in: path
+        name: listId
+        required: true
+        type: integer
+      - description: item id
+        in: path
+        name: itemId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.responseId'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.errorMsg'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.errorMsg'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.errorMsg'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handlers.errorMsg'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete item by id
+      tags:
+      - item
+    get:
+      consumes:
+      - application/json
+      description: Get item by id
+      operationId: get-item-by-id
+      parameters:
+      - description: list id
+        in: path
+        name: listId
+        required: true
+        type: integer
+      - description: item id
+        in: path
+        name: itemId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Item'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.errorMsg'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.errorMsg'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.errorMsg'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handlers.errorMsg'
+      security:
+      - ApiKeyAuth: []
+      summary: Get item by id
+      tags:
+      - item
+    put:
+      consumes:
+      - application/json
+      description: Update item by id
+      operationId: update-item-by-id
+      parameters:
+      - description: list id
+        in: path
+        name: listId
+        required: true
+        type: integer
+      - description: item id
+        in: path
+        name: itemId
+        required: true
+        type: integer
+      - description: Item content
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/models.Item'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.responseId'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.errorMsg'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.errorMsg'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.errorMsg'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handlers.errorMsg'
+      security:
+      - ApiKeyAuth: []
+      summary: Update item by id
+      tags:
+      - item
   /auth/sign-in:
     post:
       consumes:
@@ -286,7 +536,7 @@ paths:
           description: ""
           schema:
             $ref: '#/definitions/handlers.errorMsg'
-      summary: CreateItem
+      summary: SignIn
       tags:
       - auth
   /auth/sign-up:
@@ -328,9 +578,4 @@ paths:
       summary: SignUp
       tags:
       - auth
-securityDefinitions:
-  ApiKeyAuth:
-    in: header
-    name: Authorization
-    type: apiKey
 swagger: "2.0"

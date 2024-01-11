@@ -8,18 +8,20 @@ import (
 	"github.com/moxicom/todo-back/models"
 )
 
-// @Summary CreateItem
-// @Tags auth
-// @Description sign in to account
-// @ID sign-in
+// @Summary Create item
+// @Security ApiKeyAuth
+// @Tags item
+// @Description create item
+// @ID create-item
 // @Accept  json
 // @Produce  json
-// @Param input body signInInput true "credentials"
-// @Success 200 {string} string "token"
+// @Param listId path int true "list id"
+// @Param input body models.Item true "Item"
+// @Success 200 {object} responseId
 // @Failure 400,404 {object} errorMsg
 // @Failure 500 {object} errorMsg
 // @Failure default {object} errorMsg
-// @Router /auth/sign-in [post]
+// @Router /api/lists/{listId}/items [post]
 func (h *Handler) CreateItem(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
@@ -44,8 +46,8 @@ func (h *Handler) CreateItem(c *gin.Context) {
 		newResponseError(c, http.StatusInternalServerError, err.Error())
 		return
 	}
-	c.JSON(http.StatusOK, map[string]interface{}{
-		"id": itemId,
+	c.JSON(http.StatusOK, responseId{
+		Id: itemId,
 	})
 }
 
@@ -53,6 +55,19 @@ type getAllItemsResponse struct {
 	Data []models.Item `json:"data"`
 }
 
+// @Summary Get all items
+// @Security ApiKeyAuth
+// @Tags item
+// @Description Get all items
+// @ID get-all-items
+// @Accept  json
+// @Produce  json
+// @Param listId path int true "list id"
+// @Success 200 {object} getAllItemsResponse
+// @Failure 400,404 {object} errorMsg
+// @Failure 500 {object} errorMsg
+// @Failure default {object} errorMsg
+// @Router /api/lists/{listId}/items/ [get]
 func (h *Handler) GetAllItems(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
@@ -77,6 +92,20 @@ func (h *Handler) GetAllItems(c *gin.Context) {
 	})
 }
 
+// @Summary Get item by id
+// @Security ApiKeyAuth
+// @Tags item
+// @Description Get item by id
+// @ID get-item-by-id
+// @Accept  json
+// @Produce  json
+// @Param listId path int true "list id"
+// @Param itemId path int true "item id"
+// @Success 200 {object} models.Item
+// @Failure 400,404 {object} errorMsg
+// @Failure 500 {object} errorMsg
+// @Failure default {object} errorMsg
+// @Router /api/lists/{listId}/items/{itemId} [get]
 func (h *Handler) GetItem(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
@@ -105,6 +134,21 @@ func (h *Handler) GetItem(c *gin.Context) {
 	c.JSON(http.StatusOK, item)
 }
 
+// @Summary Update item by id
+// @Security ApiKeyAuth
+// @Tags item
+// @Description Update item by id
+// @ID update-item-by-id
+// @Accept  json
+// @Produce  json
+// @Param listId path int true "list id"
+// @Param itemId path int true "item id"
+// @Param input body models.Item true "Item content"
+// @Success 200 {object} responseId
+// @Failure 400,404 {object} errorMsg
+// @Failure 500 {object} errorMsg
+// @Failure default {object} errorMsg
+// @Router /api/lists/{listId}/items/{itemId} [put]
 func (h *Handler) UpdateItem(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
@@ -136,9 +180,25 @@ func (h *Handler) UpdateItem(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, map[string]interface{}{"id": itemId})
+	c.JSON(http.StatusOK, responseId{
+		Id: itemId,
+	})
 }
 
+// @Summary Delete item by id
+// @Security ApiKeyAuth
+// @Tags item
+// @Description Delete item by id
+// @ID delete-item-by-id
+// @Accept  json
+// @Produce  json
+// @Param listId path int true "list id"
+// @Param itemId path int true "item id"
+// @Success 200 {object} responseId
+// @Failure 400,404 {object} errorMsg
+// @Failure 500 {object} errorMsg
+// @Failure default {object} errorMsg
+// @Router /api/lists/{listId}/items/{itemId} [delete]
 func (h *Handler) DeleteItem(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
@@ -164,5 +224,7 @@ func (h *Handler) DeleteItem(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, map[string]interface{}{"id": itemId})
+	c.JSON(http.StatusOK, responseId{
+		Id: itemId,
+	})
 }
