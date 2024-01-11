@@ -1,3 +1,4 @@
+basePath: /
 definitions:
   handlers.errorMsg:
     properties:
@@ -76,6 +77,9 @@ definitions:
     type: object
 info:
   contact: {}
+  description: This is a simple backend for todo application using golang
+  title: Todo application back
+  version: "0.1"
 paths:
   /api/lists:
     get:
@@ -578,4 +582,9 @@ paths:
       summary: SignUp
       tags:
       - auth
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"
