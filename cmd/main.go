@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"os/signal"
 	"syscall"
 	"time"
@@ -56,9 +57,18 @@ func runServer(ctx context.Context) error {
 	}
 
 	//Db Migration
-	err = repository.NewMigration(db)
-	if err != nil {
-		logrus.Fatalf("%s", err.Error())
+	if len(os.Args) >= 2 {
+		command := os.Args[1]
+		switch command {
+		case "migrate":
+			err = repository.NewMigration(db)
+			if err != nil {
+				logrus.Fatalf("%s", err.Error())
+			}
+			os.Exit(0)
+		default:
+			panic("Bad args")
+		}
 	}
 
 	// Dependency injection
