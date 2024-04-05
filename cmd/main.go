@@ -14,7 +14,6 @@ import (
 	"github.com/moxicom/todo-back/pkg/repository"
 	"github.com/moxicom/todo-back/pkg/service"
 	"github.com/sirupsen/logrus"
-	"github.com/spf13/viper"
 )
 
 // @title Todo application back
@@ -36,10 +35,6 @@ func main() {
 }
 
 func runServer(ctx context.Context) error {
-	// Config init
-	if err := config.Init(); err != nil {
-		logrus.Fatalf("%s", err.Error())
-	}
 	// dotenv init
 	if err := godotenv.Load(); err != nil {
 		logrus.Fatalf("%s", err.Error())
@@ -57,20 +52,20 @@ func runServer(ctx context.Context) error {
 	}
 
 	//Db Migration
-	if len(os.Args) >= 2 {
-		command := os.Args[1]
-		switch command {
-		case "migrate":
-			err = repository.NewMigration(db)
-			if err != nil {
-				logrus.Fatalf("%s", err.Error())
-			}
-			os.Exit(0)
-		default:
-			panic("Bad args")
-		}
+	// if len(os.Args) >= 2 {
+	// 	command := os.Args[1]
+	// 	switch command {
+	// 	case "migrate":
+	err = repository.NewMigration(db)
+	if err != nil {
+		logrus.Fatalf("%s", err.Error())
 	}
-
+			// os.Exit(0)
+	// 	default:
+	// 		panic("Bad args")
+	// 	}
+	// }
+		
 	// Dependency injection
 	repository := repository.NewRepository(db)
 	service := service.NewService(repository)
@@ -78,7 +73,7 @@ func runServer(ctx context.Context) error {
 	server := todoback.NewServer()
 
 	go func() {
-		if err = server.Run(viper.GetString("server_port"), handler.InitRoutes()); err != nil {
+		if err = server.Run(os.Getenv("SERVER_PORT"), handler.InitRoutes()); err != nil {
 			logrus.Fatalf("Listen and serve: %s", err.Error())
 		}
 	}()
