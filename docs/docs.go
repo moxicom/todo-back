@@ -704,14 +704,14 @@ const docTemplate = `{
                             "$ref": "#/definitions/handlers.errorMsg"
                         }
                     },
-                    "404": {
-                        "description": "Not Found",
+                    "401": {
+                        "description": "Unauthorized",
                         "schema": {
                             "$ref": "#/definitions/handlers.errorMsg"
                         }
                     },
-                    "500": {
-                        "description": "Internal Server Error",
+                    "404": {
+                        "description": "Not Found",
                         "schema": {
                             "$ref": "#/definitions/handlers.errorMsg"
                         }
@@ -769,8 +769,8 @@ const docTemplate = `{
                             "$ref": "#/definitions/handlers.errorMsg"
                         }
                     },
-                    "500": {
-                        "description": "Internal Server Error",
+                    "409": {
+                        "description": "Conflict",
                         "schema": {
                             "$ref": "#/definitions/handlers.errorMsg"
                         }
