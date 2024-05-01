@@ -152,25 +152,25 @@ func (h *Handler) GetItem(c *gin.Context) {
 func (h *Handler) UpdateItem(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
-		newResponseError(c, http.StatusInternalServerError, err.Error())
+		newResponseError(c, http.StatusBadRequest, err.Error())
 		return
 	}
 
 	listId, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		newResponseError(c, http.StatusInternalServerError, err.Error())
+		newResponseError(c, http.StatusBadRequest, err.Error())
 		return
 	}
 
 	itemId, err := strconv.Atoi(c.Param("item_id"))
 	if err != nil {
-		newResponseError(c, http.StatusInternalServerError, err.Error())
+		newResponseError(c, http.StatusBadRequest, err.Error())
 		return
 	}
 
 	var input models.Item
 	if err := c.ShouldBindJSON(&input); err != nil {
-		newResponseError(c, http.StatusInternalServerError, err.Error())
+		newResponseError(c, http.StatusBadRequest, err.Error())
 		return
 	}
 

@@ -34,7 +34,7 @@ type Item struct {
 	Id          int    `json:"id" gorm:"primaryKey"`
 	Title       string `json:"title" binding:"required"`
 	Description string `json:"description" binding:"required"`
-	Done        bool   `json:"done" binding:"required"`
+	Done        bool   `json:"done"`
 
 	ListItems []ListItem `gorm:"foreignKey:ItemId" json:"-"`
 }
