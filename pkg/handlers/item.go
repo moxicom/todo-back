@@ -25,19 +25,19 @@ import (
 func (h *Handler) CreateItem(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
-		newResponseError(c, http.StatusInternalServerError, err.Error())
+		newResponseError(c, http.StatusBadRequest, err.Error())
 		return
 	}
 
 	listId, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		newResponseError(c, http.StatusInternalServerError, err.Error())
+		newResponseError(c, http.StatusBadRequest, err.Error())
 		return
 	}
 
 	var input models.Item
 	if err := c.BindJSON(&input); err != nil {
-		newResponseError(c, http.StatusInternalServerError, err.Error())
+		newResponseError(c, http.StatusBadRequest, err.Error())
 		return
 	}
 

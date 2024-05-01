@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"fmt"
+
 	"github.com/moxicom/todo-back/models"
 	"gorm.io/gorm"
 )
@@ -84,23 +86,68 @@ func (r *todoListRepository) Update(userId, listId int, input models.TodoList) e
 	return nil
 }
 
-func (r *todoListRepository) Delete(userId, listId int) error {
-	_, err := r.GetById(userId, listId)
+func (r *todoListRepository) Delete(userID, listID int) error {
+	_, err := r.GetById(userID, listID)
 	if err != nil {
 		return err
 	}
 
-	// delete
-	tx := r.db.Begin()
-	if err := tx.Where("user_id = ? AND list_id = ?", userId, listId).Delete(&models.UserList{}).Error; err != nil {
-		tx.Rollback()
-		return err
-	}
+	// // delete
+	// tx := r.db.Begin()
+	// if err := tx.Where("user_id = ? AND list_id = ?Item", userId, listId).Delete(&models.Item{}).Error; err != nil {
 
-	if err := tx.Where("id = ?", listId).Delete(&models.TodoList{}).Error; err != nil {
-		tx.Rollback()
-		return err
-	}
+	// if err := tx.Where("user_id = ? AND list_id = ?", userId, listId).Delete(&models.UserList{}).Error; err != nil {
+	// 	tx.Rollback()
+	// 	return err
+	// }
 
-	return tx.Commit().Error
+	// if err := tx.Where("id = ?", listId).Delete(&models.TodoList{}).Error; err != nil {
+	// 	tx.Rollback()
+	// 	return err
+	// }
+
+	// return tx.Commit().Error
+	// Начать транзакцию
+    tx := r.db.Begin()
+
+    var itemIDs []int
+    if err := tx.Model(&models.ListItem{}).Where("list_id = ?", listID).Pluck("item_id", &itemIDs).Error; err != nil {
+        // Если произошла ошибка, откатить транзакцию и вернуть ошибку
+        tx.Rollback()
+        return err
+    }
+	
+	fmt.Println("itemIDs: ", itemIDs)
+
+    // Удалить записи из таблицы ListItem
+    if err := tx.Where("list_id = ?", listID).Delete(&models.ListItem{}).Error; err != nil {
+        // Если произошла ошибка, откатить транзакцию и вернуть ошибку
+        tx.Rollback()
+        return err
+    }
+
+    // Удалить записи из таблицы Item
+    if err := tx.Where("id IN (?)", itemIDs).Delete(&models.Item{}).Error; err != nil {
+        // Если произошла ошибка, откатить транзакцию и вернуть ошибку
+        tx.Rollback()
+        return err
+    }
+
+
+    // Удалить запись из таблицы TodoList
+    if err := tx.Where("list_id = ?", listID).Delete(&models.UserList{}).Error; err != nil {
+        // Если произошла ошибка, откатить транзакцию и вернуть ошибку
+        tx.Rollback()
+        return err
+    }
+
+    // Удалить запись из таблицы TodoList
+    if err := tx.Where("id = ?", listID).Delete(&models.TodoList{}).Error; err != nil {
+        // Если произошла ошибка, откатить транзакцию и вернуть ошибку
+        tx.Rollback()
+        return err
+    }
+
+    // Закончить транзакцию
+    return tx.Commit().Error
 }

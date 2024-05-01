@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	jwtTimeOut = 12 * time.Hour
+	jwtTimeOut = 10 * time.Minute
 	saltOs     = "PASSWORD_SALT"      // password hash salt
 	signingKey = "wesdrftgyhujikujgh" // jwt signing key
 )
