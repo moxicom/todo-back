@@ -9,5 +9,6 @@ RUN go mod tidy
 
 RUN go build -o /main ./cmd/main.go
 
-RUN ls -l
+CMD ["/main"]
+
 
